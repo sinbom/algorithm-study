@@ -1,6 +1,7 @@
 .gradle
 .idea
 out
+build
 gradlew
 gradle
 *.gradle
