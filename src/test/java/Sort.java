@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 @DisplayName("알고리즘 테스트")
 public class Sort {
 
-    private int[] expected = {1,2,3,4,5,6,7,8,9,10};
+    private int[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
     /**
      * 선택 정렬, 시간 복잡도 N^2
@@ -164,13 +163,69 @@ public class Sort {
 
     }
 
+    /**
+     * 힙 정렬, 완전 이진 트리(자식노드의 갯수가 최대 2개이고 왼쪽부터 차례대로 채워지는 트리)를 이용한 정렬
+     * 전체의 자료를 정렬할 때도 준수한 성능으로 사용하지만 특히 가장 크거나 작은 몇 개의 값을 추출할 때 유용하다.
+     * 시간 복잡도는 균일하게 nlog2^n 이다. 퀵 정렬이 기본적으로 더 빠르지만 퀵 정렬이 이미 정렬이 되어 있는 최악의 경우에 힙 보다 조금 느리다.
+     * 배열의 인덱스를 활용하여 시작 인덱스를 1로하고 자식 노드들을 쉽게 인덱싱 접근하여(1 * 2 = 왼쪽 자식 노드, 1 * 2 + 1 = 오른쪽 자식 노드)
+     * 값을 힙에 삽입 시 마지막 노드에 추가하고 부모 노드와 크기를 비교하여 결과에 따라 부모 노드와 자리가 교체된다.
+     * 모든 값을 힙에 삽입하고 값을 추출하면서 힙의 특성상 루트 노드가 가장 크거나 작은 것을 이용하여(최대힙, 최소힙)정렬된 값을 얻을 수 있다.
+     * 값을 추출 시 루트 노드를 추출하고 마지막 노드를 루트 노드로 올리고 자식 노드들 중 가장 크거나 작은 값을 선택하여 마지막 노드의 값이었던
+     * 루트 노드로 올라간 값과 비교 후 결과에 따라 자식 노드와 자리가 교체된다. 삽입과 추출마다 부모의 노드가 자식 노드보다 크거나 작은 특성을 이용한다.
+     *
+     * @param array
+     */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("힙 정렬")
     @ArgumentsSource(ArgsProvider.class)
-    public void heapSort() {
+    public void heapSort(int[] array) {
+        class Heap {
+            int[] array;
+            int index = 0;
 
+            Heap(int length) {
+                this.array = new int[length + 1]; // 첫 번째 인덱스 0을 사용하지 않으므로 자식 / 2 = 부모 인덱스구현을 위함
+            }
+        }
+        Heap heap = new Heap(array.length);
+        // 삽입 연산(정렬)
+        for (int number : array) {
+            int index = ++heap.index; /// 새로운 노드를 실제로 삽입하지 않고 위치가 정해진 후 한 번의 삽입으로 마치기 위해서 삽입을 가정하기위해 값을 삽입하지 않고 인덱스를 증가시킨다.
+            while (index > 1 && number < heap.array[index / 2]) { // 현재 인덱스가 루트인 1보다 크고, 삽입 값이 부모 값보다 작다면
+                heap.array[index] = heap.array[index / 2]; // 부모 노드의 값을 자식 노드의 값으로 끝어내린다.
+                index /= 2; // 인덱스를 부모 인덱스로 이동.
+            }
+            heap.array[index] = number; // 루트에 도달하거나 부모보다 작지 않은경우 현재 인덱스에 값을 입력
+        }
+        // 삭제 연산(사용, 추출)
+        array = new int[array.length]; // 사용, 추출하기 위해 배열을 초기화
+        int i = 0; // 추출을 위한 배열의 인덱스
+        while (heap.index > 0) { // 추출할 노트(루트)가 존재하는 경우
+            array[i++] = heap.array[1]; // 힙의 최대 값인 루트 노드의 값을 추출
+            int number = heap.array[heap.index]; // 추출해서 비어지는 루트 노드를 메꾸기 위해 가장 마지막 노드의 루트 노드로 올리기위해 추출
+            heap.array[heap.index--] = 0; // 추출한 값을 제거 후 인덱스 감소
+            if (heap.index == 0) {
+                break; // 더 이상 추출할 노드가 없는 힙의 경우 반복을 종료한다, 없는 경우 인덱스 0, 인덱스는 마지막 노드를 가르킨다.
+            }
+            int index = 1; // 마지막 노드가 이동한 루트 노드의 인덱스
+            while (heap.index >= index * 2) { // 현재 노드와 비교할 자식 노드가 존재해야한다
+                int childIndex;
+                if (heap.index > index * 2) { // 자식 노드가 2개라면
+                    childIndex = heap.array[index * 2] < heap.array[index * 2 + 1] ? index * 2 : index * 2 + 1; // 자식 노드 2개를 비교하여 더 작은 값을 비교 자식 노드로 사용
+                } else { // 자식 노드가 1개라면
+                    childIndex = index * 2; // 존재하는 자식 노드를 비교 노드로 사용
+                }
+                if (heap.array[childIndex] < number) { // 자식 노드가 값이 더 작다면
+                    heap.array[index] = heap.array[childIndex]; // 현재 인덱스에 자식 노드의 값을 올린다.
+                    index = childIndex; // 현재 인덱스의 위치를 자식 노드 인덱스 위치로 이동한다.
+                } else {
+                    break; // 자식 노드들보다 작지 않은 경우 더 이상 비교하지 않고 마친다.
+                }
+            }
+            heap.array[index] = number; // 더 이상 비교할 현재 노드의 자식 노드들이 없는 경우 현재 인덱스 값에 원래 마지막 노드였던 값을 위치
+        }
+        assertArrayEquals(expected, array);
     }
-
 
     // =========================================================================================================
     public void swap(int[] array, int swap, int swap2) {
