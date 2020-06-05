@@ -227,6 +227,63 @@ public class Sort {
         assertArrayEquals(expected, array);
     }
 
+    /**
+     * 합병 정렬, 분할 정복 알고리즘으로 재귀로 정렬을 진행한다. 특이한 점은 배열로 정렬을 진행하면 이분 분할시 쪼개지는 배열들을 병합할 때 임시 배열이 필요하다.
+     * 레코드의 크기가 큰 경우 이동횟수가 많고 분할하기 전 원본 배열의 사이즈 만큼의 임시 배열이 필요하므로 낭비가 크다.
+     * 장점은 데이터의 분포(이미 정렬이 되어 있든 아니든)에 영향을 덜 받으며 입력 데이터가 무엇이든 간에 시간 복잡도가 nlog2^n으로 동일하다.
+     * 분할 단계에서 비교 연산이 일어나지 않는다. 크기가 큰 데이터들을 정렬할 때 연결리스트를 사용하면 다른 어떤 정렬보다 효율적이다.
+     * @param array
+     */
+    @ParameterizedTest(name = "{index}. {displayName} {arguments}")
+    @DisplayName("합병 정렬")
+    @ArgumentsSource(ArgsProvider.class)
+    public void mergeSort(int[] array) {
+        mergeSort(array, 0, array.length - 1);
+        assertArrayEquals(expected, array);
+    }
+
+    /**
+     *
+     * @param array 재귀로 분할되는 배열
+     * @param left 왼쪽 인덱스
+     * @param right 오른쪽 인덱스
+     */
+    public void mergeSort(int[] array, int left, int right) {
+        if (left >= right) { // 이중 분할되고 분할된 배열이 1개 이하이면 정렬할게 없다.
+            return;
+        }
+        int mid = (left + right) / 2;
+        mergeSort(array, left, mid);
+        mergeSort(array, mid + 1, right);
+
+        int[] temp = new int[10];
+        int index = left;
+        int low = left;
+        int high = mid + 1;
+        while (low <= mid && high <= right) {
+            if (array[low] < array[high]) {
+                temp[index++] = array[low++];
+            } else {
+                temp[index++] = array[high++];
+            }
+        }
+        if (low > mid) {
+            while (high <= right) {
+                temp[index++] = array[high++];
+            }
+        } else {
+            while (low <= mid) {
+                temp[index++] = array[low++];
+            }
+        }
+
+        for (int i = left; i <= right; i++) {
+            array[i] = temp[i];
+        }
+    }
+
+
+
     // =========================================================================================================
     public void swap(int[] array, int swap, int swap2) {
         int temp = array[swap];
