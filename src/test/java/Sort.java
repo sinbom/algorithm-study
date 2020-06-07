@@ -1,3 +1,4 @@
+import dataStructure.MyLinkedList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -294,9 +295,9 @@ public class Sort {
     @DisplayName("기수 정렬")
     @ArgumentsSource(ArgsProvider.class)
     public void radixSort(int[] array) {
-        List<LinkedList<Integer>> bucket = new ArrayList<>();
+        List<MyLinkedList<Integer>> bucket = new ArrayList<>();
         IntStream.range(0, 10) // 데이터의 최대 사이즈 (예 정수(0~10), 영문(a~z))만큼의 버킷 생성
-                .forEach(n -> bucket.add(new LinkedList<>()));
+                .forEach(n -> bucket.add(new MyLinkedList<>()));
 
         int divide = 1; // 자릿수 만큼 증가하며 나누기 위해 * 10 씩 곱셈되는 나눗셈 수
         int max = Arrays.stream(array).max().getAsInt(); // 가장 큰수를 조회
@@ -305,13 +306,13 @@ public class Sort {
         for (int i = 0; i < maxSize; i++) { // 가장 큰수의 자릿수 갯수 만큼 자릿수 비교
             for (int number : array) { // 배열의 모든 데이터를 버킷에 삽입
                 int index = number / divide % 10; // 비교 자릿수의 값을 인덱스로 사용하여 버킷이 연결리스트에 삽입
-                LinkedList<Integer> linkedList = bucket.get(index);
+                MyLinkedList<Integer> linkedList = bucket.get(index);
                 linkedList.add(number);
             }
 
             int index = 0;
-            for (LinkedList<Integer> linkedList : bucket) { // 버킷에 있는 모든 연결리스트를 순회한다
-                while (!linkedList.isEmpty()) { // 모든 연결리스트를 순서대로 꺼내서 배열에 담는다
+            for (MyLinkedList<Integer> linkedList : bucket) { // 버킷에 있는 모든 연결리스트를 순회한다
+                while (!linkedListㅇ.isEmpty()) { // 모든 연결리스트를 순서대로 꺼내서 배열에 담는다
                     array[index++] = linkedList.removeFirst(); // 담긴 배열은 자릿수 기준으로 정렬이 되어 있는 상태이다.
                 }
             }
