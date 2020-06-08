@@ -3,7 +3,7 @@ package dataStructure.linear;
 import java.util.NoSuchElementException;
 
 /**
- * 연결 리스트
+ * 연결 리스트, Deque 기능도 수행 가능.
  *
  * @param <T> 노드 데이터 제네릭 타입
  */

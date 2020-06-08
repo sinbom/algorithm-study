@@ -3,7 +3,7 @@ package dataStructure.linear;
 import java.util.NoSuchElementException;
 
 /**
- * 양방향 순환 연결 리스트
+ * 양방향 순환 연결 리스트, Deque 기능도 수행 가능.
  *
  * @param <T> 노드 데이터 제네릭 타입
  */
@@ -39,6 +39,7 @@ public class CircularLinkedList<T> {
             newNode.prev = firstNode.prev;
             newNode.next = firstNode;
             firstNode.prev = newNode;
+            last.next = newNode;
         }
         size++;
     }
@@ -60,6 +61,7 @@ public class CircularLinkedList<T> {
             newNode.prev = lastNode;
             newNode.next = lastNode.next;
             lastNode.next = newNode;
+            first.prev = newNode;
         }
         size++;
     }
@@ -77,6 +79,7 @@ public class CircularLinkedList<T> {
             node.prev = newNode;
             if (node == first) {
                 first = newNode;
+                last.next = newNode;
             }
             size++;
         } else {
@@ -97,6 +100,7 @@ public class CircularLinkedList<T> {
             node.next = newNode;
             if (node == last) {
                 last = newNode;
+                first.prev = newNode;
             }
             size++;
         } else {

@@ -1,20 +1,23 @@
 package sort;
 
-import common.CommonTest;
 import dataStructure.linear.CircularLinkedList;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @DisplayName("정렬 테스트")
-public class Sort extends CommonTest {
+public class Sort {
 
     /**
      * 선택 정렬, 시간 복잡도 N^2
@@ -22,8 +25,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("선택 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void selectionSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void selectionSort(int[] expected, int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = i + 1; j < array.length; j++) {
                 if (array[i] > array[j]) {
@@ -41,8 +44,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("버블 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void bubbleSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void bubbleSort(int[] expected, int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             boolean isSorted = true; // 이미 정렬이 되어 있는지 플래그
             for (int j = 0; j < array.length - i - 1; j++) {
@@ -66,8 +69,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("삽입 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void insertionSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void insertionSort(int[] expected, int[] array) {
         int i, j;
         for (i = 1; i < array.length; i++) {
             int key = array[i];
@@ -89,8 +92,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("쉘 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void shellSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void shellSort(int[] expected, int[] array) {
         int j, k;
         for (int gap = array.length / 2; gap > 0; gap /= 2) {
             gap = gap % 2 == 0 ? gap + 1 : gap; // 간격은 홀수가 성능이 좋음
@@ -115,8 +118,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("퀵 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void quickSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void quickSort(int[] expected, int[] array) {
         quickSort(array, 0, array.length - 1);
         assertArrayEquals(expected, array);
     }
@@ -181,8 +184,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("힙 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void heapSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void heapSort(int[] expected, int[] array) {
         class Heap {
             int[] array;
             int index = 0;
@@ -241,8 +244,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("합병 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void mergeSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void mergeSort(int[] expected, int[] array) {
         mergeSort(array, 0, array.length - 1);
         assertArrayEquals(expected, array);
     }
@@ -295,8 +298,8 @@ public class Sort extends CommonTest {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("기수 정렬")
-    @ArgumentsSource(CommonTest.ArgsProvider.class)
-    public void radixSort(int[] array) {
+    @ArgumentsSource(ArgsProvider.class)
+    public void radixSort(int[] expected, int[] array) {
         List<CircularLinkedList<Integer>> bucket = new ArrayList<>();
         IntStream.range(0, 10) // 데이터의 최대 사이즈 (예 정수(0~10), 영문(a~z))만큼의 버킷 생성
                 .forEach(n -> bucket.add(new CircularLinkedList<>()));
@@ -330,6 +333,19 @@ public class Sort extends CommonTest {
         int temp = array[swap];
         array[swap] = array[swap2];
         array[swap2] = temp;
+    }
+
+    public static class ArgsProvider implements ArgumentsProvider {
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+            return Stream.of(
+                    Arguments.of(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{10, 6, 4, 5, 8, 2, 1, 7, 9, 3}),
+                    Arguments.of(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{1, 8, 4, 3, 6, 2, 10, 9, 7, 5}),
+                    Arguments.of(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{5, 8, 10, 4, 3, 7, 1, 2, 9, 6}),
+                    Arguments.of(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{1, 6, 2, 7, 10, 8, 4, 9, 5, 3}),
+                    Arguments.of(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, new int[]{3, 6, 8, 5, 7, 4, 1, 2, 9, 10})
+            );
+        }
     }
 
 }
