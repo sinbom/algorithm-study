@@ -1,21 +1,20 @@
-import dataStructure.MyLinkedList;
+package sort;
+
+import common.CommonTest;
+import dataStructure.linear.LinkedList;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @DisplayName("알고리즘 테스트")
-public class Sort {
-
-    private int[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+public class Sort extends CommonTest {
 
     /**
      * 선택 정렬, 시간 복잡도 N^2
@@ -23,7 +22,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("선택 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void selectionSort(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = i + 1; j < array.length; j++) {
@@ -42,7 +41,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("버블 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void bubbleSort(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             boolean isSorted = true; // 이미 정렬이 되어 있는지 플래그
@@ -67,7 +66,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("삽입 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void insertionSort(int[] array) {
         int i, j;
         for (i = 1; i < array.length; i++) {
@@ -90,7 +89,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("쉘 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void shellSort(int[] array) {
         int j, k;
         for (int gap = array.length / 2; gap > 0; gap /= 2) {
@@ -116,7 +115,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("퀵 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void quickSort(int[] array) {
         quickSort(array, 0, array.length - 1);
         assertArrayEquals(expected, array);
@@ -147,6 +146,8 @@ public class Sort {
 
         if (right - left + 1 > 3) { // 총 갯수가 3개이하라면 이미 왼쪽, 중간, 오른쪽 정렬에서 정렬을 마친 상태,
             swap(array, left + 1, mid); // 왼쪽 + 1 값과 중간 값을 교체, 즉 중간 값을 왼쪽으로 보내서 피봇(기준)으로 사용
+            // 사용하는 이유는 피벗을 가장 왼쪽이나 오른쪽으로 두어야 low, high가 증감하며 교차했을 시 피벗과 high를 교체하는데 hight보다 피벗보다 왼쪽에 잇는 경우
+            // high와 교체했을시 피벗보다 오른쪽으로 이동하게 되면서 분할해서 정렬한 결과에서 피벗 기준 오른쪽에 피벗 보다 더 작은 값인 high가 존재하게 되므로 정렬이 깨진다.
             int low, high, pivot; // , 왼쪽과 오른쪽 값을 제외시키고 정렬한다. left + 1, right - 1
             low = left + 2; // 피봇보다 큰 값을 찾는다, 왼쪽, 중간, 오른쪽에서 정렬한 왼쪽 값은 제외, 왼쪽은 자신을 제외한 다음부터 비교 시작
             high = right - 1; // 피봇보다 작은 값을 찾는다, 왼쪽, 중간, 오른쪽에서 정렬한 오른쪽 값은 제외
@@ -180,7 +181,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("힙 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void heapSort(int[] array) {
         class Heap {
             int[] array;
@@ -240,7 +241,7 @@ public class Sort {
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("합병 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void mergeSort(int[] array) {
         mergeSort(array, 0, array.length - 1);
         assertArrayEquals(expected, array);
@@ -289,15 +290,16 @@ public class Sort {
      * 기수 정렬, 1의 자리수 부터 가장 큰 수의 자리 수 까지 반복하며 1의 자리수 부터 큰 것들을 비교하여 자리수를 인덱스를 사용하여 버킷(연결리스트)에 넣은 후
      * 차례대로 끄내면서 다시 배열에 저장하고 다음 자리 수를 비교하며 버킷에 넣는 과정을 반복하는 정렬이다. 시간 복잡도는 N으로 균일하게 빠르지만.
      * 비교 연산을 수행하지 않는 대신 데이터 전체 크기(정수인 경우 0~9, 알파벳의 경우 a~z)의 임시 저장 메모리가 필요하므로 공간 복잡도가 크다.
+     *
      * @param array
      */
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("기수 정렬")
-    @ArgumentsSource(ArgsProvider.class)
+    @ArgumentsSource(CommonTest.ArgsProvider.class)
     public void radixSort(int[] array) {
-        List<MyLinkedList<Integer>> bucket = new ArrayList<>();
+        List<LinkedList<Integer>> bucket = new ArrayList<>();
         IntStream.range(0, 10) // 데이터의 최대 사이즈 (예 정수(0~10), 영문(a~z))만큼의 버킷 생성
-                .forEach(n -> bucket.add(new MyLinkedList<>()));
+                .forEach(n -> bucket.add(new LinkedList<>()));
 
         int divide = 1; // 자릿수 만큼 증가하며 나누기 위해 * 10 씩 곱셈되는 나눗셈 수
         int max = Arrays.stream(array).max().getAsInt(); // 가장 큰수를 조회
@@ -306,13 +308,13 @@ public class Sort {
         for (int i = 0; i < maxSize; i++) { // 가장 큰수의 자릿수 갯수 만큼 자릿수 비교
             for (int number : array) { // 배열의 모든 데이터를 버킷에 삽입
                 int index = number / divide % 10; // 비교 자릿수의 값을 인덱스로 사용하여 버킷이 연결리스트에 삽입
-                MyLinkedList<Integer> linkedList = bucket.get(index);
+                LinkedList<Integer> linkedList = bucket.get(index);
                 linkedList.add(number);
             }
 
             int index = 0;
-            for (MyLinkedList<Integer> linkedList : bucket) { // 버킷에 있는 모든 연결리스트를 순회한다
-                while (!linkedListㅇ.isEmpty()) { // 모든 연결리스트를 순서대로 꺼내서 배열에 담는다
+            for (LinkedList<Integer> linkedList : bucket) { // 버킷에 있는 모든 연결리스트를 순회한다
+                while (!linkedList.isEmpty()) { // 모든 연결리스트를 순서대로 꺼내서 배열에 담는다
                     array[index++] = linkedList.removeFirst(); // 담긴 배열은 자릿수 기준으로 정렬이 되어 있는 상태이다.
                 }
             }
@@ -328,20 +330,6 @@ public class Sort {
         int temp = array[swap];
         array[swap] = array[swap2];
         array[swap2] = temp;
-    }
-
-
-    public static class ArgsProvider implements ArgumentsProvider {
-        @Override
-        public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-            return Stream.of(
-                    Arguments.of((Object) new int[]{10, 6, 4, 5, 8, 2, 1, 7, 9, 3}),
-                    Arguments.of((Object) new int[]{1, 8, 4, 3, 6, 2, 10, 9, 7, 5}),
-                    Arguments.of((Object) new int[]{5, 8, 10, 4, 3, 7, 1, 2, 9, 6}),
-                    Arguments.of((Object) new int[]{1, 6, 2, 7, 10, 8, 4, 9, 5, 3}),
-                    Arguments.of((Object) new int[]{3, 6, 8, 5, 7, 4, 1, 2, 9, 10})
-            );
-        }
     }
 
 }

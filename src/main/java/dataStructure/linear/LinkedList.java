@@ -1,4 +1,4 @@
-package dataStructure;
+package dataStructure.linear;
 
 import java.util.NoSuchElementException;
 
@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
  * 연결 리스트
  * @param <T> 노드 데이터 제네릭 타입
  */
-public class MyLinkedList<T> {
+public class LinkedList<T> {
 
     /** 현재 노드 갯수 */
     private int size;
