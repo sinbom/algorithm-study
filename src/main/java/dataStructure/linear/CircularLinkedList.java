@@ -3,11 +3,11 @@ package dataStructure.linear;
 import java.util.NoSuchElementException;
 
 /**
- * 연결 리스트
+ * 양방향 순환 연결 리스트
  *
  * @param <T> 노드 데이터 제네릭 타입
  */
-public class LinkedList<T> {
+public class CircularLinkedList<T> {
 
     /**
      * 시작 노드
@@ -28,12 +28,16 @@ public class LinkedList<T> {
      * @param data 데이터
      */
     public void addFirst(T data) {
+        MyNode<T> newNode = new MyNode<>(data, null, null);
         MyNode<T> firstNode = first;
-        MyNode<T> newNode = new MyNode<>(data, null, first);
         first = newNode;
         if (firstNode == null) {
+            newNode.prev = newNode;
+            newNode.next = newNode;
             last = newNode;
         } else {
+            newNode.prev = firstNode.prev;
+            newNode.next = firstNode;
             firstNode.prev = newNode;
         }
         size++;
@@ -45,12 +49,16 @@ public class LinkedList<T> {
      * @param data 데이터
      */
     public void addLast(T data) {
+        MyNode<T> newNode = new MyNode<>(data, null, null);
         MyNode<T> lastNode = last;
-        MyNode<T> newNode = new MyNode<>(data, last, null);
         last = newNode;
         if (lastNode == null) {
+            newNode.prev = newNode;
+            newNode.next = newNode;
             first = newNode;
         } else {
+            newNode.prev = lastNode;
+            newNode.next = lastNode.next;
             lastNode.next = newNode;
         }
         size++;
@@ -63,15 +71,17 @@ public class LinkedList<T> {
      * @param node 노드
      */
     public void addBefore(T data, MyNode<T> node) {
-        MyNode<T> prevNode = node.prev;
-        MyNode<T> newNode = new MyNode<>(data, prevNode, node);
-        node.prev = newNode;
-        if (prevNode != null) {
-            prevNode.next = newNode;
+        if (node != null) {
+            MyNode<T> prevNode = node.prev;
+            MyNode<T> newNode = new MyNode<>(data, prevNode.prev, prevNode);
+            node.prev = newNode;
+            if (node == first) {
+                first = newNode;
+            }
+            size++;
         } else {
-            first = newNode;
+            throw new NoSuchElementException();
         }
-        size++;
     }
 
     /**
@@ -81,15 +91,17 @@ public class LinkedList<T> {
      * @param node 노드
      */
     public void addAfter(T data, MyNode<T> node) {
-        MyNode<T> nextNode = node.next;
-        MyNode<T> newNode = new MyNode<>(data, node, nextNode);
-        node.next = newNode;
-        if (nextNode != null) {
-            nextNode.prev = newNode;
+        if (node != null) {
+            MyNode<T> nextNode = node.next;
+            MyNode<T> newNode = new MyNode<>(data, node, nextNode);
+            node.next = newNode;
+            if (node == last) {
+                last = newNode;
+            }
+            size++;
         } else {
-            last = newNode;
+            throw new NoSuchElementException();
         }
-        size++;
     }
 
     /**
@@ -126,14 +138,18 @@ public class LinkedList<T> {
     public T removeFirst() {
         if (first != null) {
             T data = first.data;
-            MyNode<T> next = first.next;
+            MyNode<T> nextNode = first.next;
+            MyNode<T> prevNode = first.prev;
             first.data = null;
             first.next = null;
-            first = next;
-            if (next != null) {
-                next.prev = null;
-            } else {
+            first.prev = null;
+            if (first == nextNode) {
+                first = null;
                 last = null;
+            } else {
+                first = nextNode;
+                nextNode.prev = prevNode;
+                prevNode.next = nextNode;
             }
             size--;
             return data;
@@ -151,13 +167,17 @@ public class LinkedList<T> {
         if (last != null) {
             T data = last.data;
             MyNode<T> prevNode = last.prev;
+            MyNode<T> nextNode = last.next;
             last.data = null;
             last.prev = null;
-            last = prevNode;
-            if (prevNode != null) {
-                prevNode.next = null;
-            } else {
+            last.next = null;
+            if (last == prevNode) {
                 first = null;
+                last = null;
+            } else {
+                last = prevNode;
+                prevNode.next = nextNode;
+                nextNode.prev = prevNode;
             }
             size--;
             return data;

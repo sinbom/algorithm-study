@@ -4,25 +4,25 @@ import dataStructure.custom.MyQueue;
 
 public class LinkedListQueue<T> implements MyQueue<T> {
 
-    private LinkedList<T> linkedList = new LinkedList<>();
+    private CircularLinkedList<T> circularLinkedList = new CircularLinkedList<>();
 
     @Override
     public void enqueue(T data) {
-        linkedList.addLast(data);
+        circularLinkedList.addLast(data);
     }
 
     @Override
     public T dequeue() {
-        return linkedList.removeFirst();
+        return circularLinkedList.removeFirst();
     }
 
     @Override
     public T peek() {
-        return linkedList.getFirst();
+        return circularLinkedList.getFirst();
     }
 
     @Override
     public boolean isEmpty() {
-        return linkedList.isEmpty();
+        return circularLinkedList.isEmpty();
     }
 }

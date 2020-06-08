@@ -4,26 +4,26 @@ import dataStructure.custom.MyStack;
 
 public class LinkedListStack<T> implements MyStack<T> {
 
-    LinkedList<T> linkedList = new LinkedList<>();
+    private CircularLinkedList<T> circularLinkedList = new CircularLinkedList<>();
 
     @Override
     public void push(T data) {
-        linkedList.addFirst(data);
+        circularLinkedList.addFirst(data);
     }
 
     @Override
     public T pop() {
-        return linkedList.removeFirst();
+        return circularLinkedList.removeFirst();
     }
 
     @Override
     public T peek() {
-        return linkedList.getFirst();
+        return circularLinkedList.getFirst();
     }
 
     @Override
     public boolean isEmpty() {
-        return linkedList.isEmpty();
+        return circularLinkedList.isEmpty();
     }
 
 }

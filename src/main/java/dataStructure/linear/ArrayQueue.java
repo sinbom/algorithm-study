@@ -4,6 +4,10 @@ import dataStructure.custom.MyQueue;
 
 import java.util.NoSuchElementException;
 
+/**
+ * 연접 리스트 원형 큐
+ * @param <T> 데이터 제네릭 타입
+ */
 public class ArrayQueue<T> implements MyQueue<T> {
 
     private Object[] array;

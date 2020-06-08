@@ -4,6 +4,10 @@ import dataStructure.custom.MyStack;
 
 import java.util.EmptyStackException;
 
+/**
+ * 연접 리스트 스택
+ * @param <T> 데이터 제네릭 타입
+ */
 public class ArrayStack<T> implements MyStack<T> {
 
     private Object[] array;
@@ -21,6 +25,8 @@ public class ArrayStack<T> implements MyStack<T> {
         if (top + 1 < array.length) {
             array[++top] = data;
             size++;
+        } else {
+            throw new IndexOutOfBoundsException();
         }
     }
 
