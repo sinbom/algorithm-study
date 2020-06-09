@@ -1,6 +1,6 @@
 package dataStructure.linear;
 
-import dataStructure.custom.MyStack;
+import interfaces.MyStack;
 
 import java.util.EmptyStackException;
 

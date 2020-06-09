@@ -1,4 +1,4 @@
-package dataStructure.custom;
+package interfaces;
 
 public interface MyStack<T> {
 

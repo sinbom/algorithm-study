@@ -1,6 +1,6 @@
 package dataStructure.linear;
 
-import dataStructure.custom.MyDeque;
+import interfaces.MyDeque;
 
 import java.util.NoSuchElementException;
 

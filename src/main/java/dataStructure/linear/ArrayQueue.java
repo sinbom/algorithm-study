@@ -1,6 +1,6 @@
 package dataStructure.linear;
 
-import dataStructure.custom.MyQueue;
+import interfaces.MyQueue;
 
 import java.util.NoSuchElementException;
 

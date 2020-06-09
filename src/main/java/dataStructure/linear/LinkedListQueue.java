@@ -1,6 +1,6 @@
 package dataStructure.linear;
 
-import dataStructure.custom.MyQueue;
+import interfaces.MyQueue;
 
 public class LinkedListQueue<T> implements MyQueue<T> {
 
