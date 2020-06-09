@@ -6,6 +6,7 @@ import java.util.EmptyStackException;
 
 /**
  * 연접 리스트 스택
+ *
  * @param <T> 데이터 제네릭 타입
  */
 public class ArrayStack<T> implements MyStack<T> {

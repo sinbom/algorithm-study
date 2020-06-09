@@ -3,7 +3,7 @@ package dataStructure.linear;
 import java.util.NoSuchElementException;
 
 /**
- * 양방향 순환 연결 리스트, Deque 기능도 수행 가능.
+ * 양방향 순환 연결 리스트, (Stack, Queue, Deque 기능 수행 가능.)
  *
  * @param <T> 노드 데이터 제네릭 타입
  */
