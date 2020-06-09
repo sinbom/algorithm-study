@@ -7,7 +7,7 @@ public class LinkedListDeque<T> implements MyDeque<T> {
     private CircularLinkedList<T> circularLinkedList = new CircularLinkedList<>();
 
     @Override
-    public void pushFirst(T data) {
+    public void pushFront(T data) {
         circularLinkedList.addFirst(data);
     }
 
@@ -39,5 +39,10 @@ public class LinkedListDeque<T> implements MyDeque<T> {
     @Override
     public boolean isEmpty() {
         return circularLinkedList.isEmpty();
+    }
+
+    @Override
+    public int getSize() {
+        return circularLinkedList.getSize();
     }
 }

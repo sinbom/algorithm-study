@@ -208,6 +208,15 @@ public class CircularLinkedList<T> {
         return size < 1;
     }
 
+    /**
+     * 연결 리스트 사이즈 반환
+     *
+     * @return 사이즈
+     */
+    public int getSize() {
+        return size;
+    }
+
 
     /**
      * 연결리스트를 구성하는 노드

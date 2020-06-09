@@ -21,8 +21,8 @@ public class ArrayDeque<T> implements MyDeque<T> {
     }
 
     @Override
-    public void pushFirst(T data) {
-        if (size == 0) {
+    public void pushFront(T data) {
+        if (isEmpty()) {
             array[first] = data;
         } else {
             int temp = first - 1;
@@ -40,17 +40,13 @@ public class ArrayDeque<T> implements MyDeque<T> {
     @Override
     public T popFront() {
         if (!isEmpty()) {
-            if (first == last && array[first] != null) {
-                T data = (T) array[first];
-                array[first] = null;
-                size--;
-                return data;
-            } else if (first != last) {
-                T data = (T) array[first];
-                array[first] = null;
+            T data = (T) array[first];
+            array[first] = null;
+            size--;
+            if (first != last) {
                 first = ++first % array.length;
-                size--;
             }
+            return data;
         }
         throw new NoSuchElementException();
     }
@@ -66,25 +62,39 @@ public class ArrayDeque<T> implements MyDeque<T> {
 
     @Override
     public void pushBack(T data) {
-        int index = (last + 1) % array.length;
-        if (index != first) {
-            array[index] = data;
-            size++;
+        if (isEmpty()) {
+            array[last] = data;
         } else {
-            throw new IndexOutOfBoundsException();
+            int index = (last + 1) % array.length;
+            if (index != first) {
+                last = index;
+                array[last] = data;
+            } else {
+                throw new IndexOutOfBoundsException();
+            }
         }
+        size++;
     }
 
     @Override
     public T popBack() {
-        return null;
+        if (!isEmpty()) {
+            T data = (T) array[last];
+            array[last] = null;
+            size--;
+            if (first != last) {
+                int temp = last - 1;
+                last = temp >= 0 ? temp : array.length - 1;
+            }
+            return data;
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public T peekBack() {
         if (!isEmpty()) {
-            int index = last > 0 ? last - 1 : array.length - 1;
-            return (T) array[index];
+            return (T) array[last];
         } else {
             throw new NoSuchElementException();
         }
@@ -93,5 +103,10 @@ public class ArrayDeque<T> implements MyDeque<T> {
     @Override
     public boolean isEmpty() {
         return size < 1;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
     }
 }

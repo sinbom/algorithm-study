@@ -1,5 +1,6 @@
 package dataStructure;
 
+import dataStructure.linear.ArrayDeque;
 import dataStructure.linear.LinkedListDeque;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
@@ -17,13 +19,52 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DequeTest {
 
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
-    @DisplayName("연결 리스트 덱 테스트")
+    @DisplayName("연접 리스트 덱 테스트")
     @ArgumentsSource(ArgsProvider.class)
     public void arrayDeque(int[] expected, int[] array) {
+        ArrayDeque<Integer> arrayDeque = new ArrayDeque<>(array.length);
+
+        for (int i = 0; i < array.length; i++) {
+            if (i % 2 == 0) {
+                arrayDeque.pushFront(array[i]);
+            } else {
+                arrayDeque.pushBack(array[i]);
+            }
+        }
+
+        int index = 0;
+        for (int i = 0; !arrayDeque.isEmpty(); i++, index++) {
+            if (i % 2 == 0) {
+                array[index] = arrayDeque.popFront();
+            } else {
+                array[index] = arrayDeque.popBack();
+            }
+        }
+        assertArrayEquals(expected, array);
+        assertTrue(arrayDeque.isEmpty());
+    }
+
+    @ParameterizedTest(name = "{index}. {displayName} {arguments}")
+    @DisplayName("연접 리스트 덱 실패 테스트")
+    @ArgumentsSource(ArgsProvider.class)
+    public void arrayDequeFail(int[] array) {
+        ArrayDeque<Integer> arrayDeque = new ArrayDeque<>(array.length);
+        assertAll(
+                () -> assertThrows(NoSuchElementException.class, arrayDeque::popFront),
+                () -> assertThrows(NoSuchElementException.class, arrayDeque::popBack)
+        );
+        Arrays.stream(array).forEach(arrayDeque::pushFront);
+        assertThrows(IndexOutOfBoundsException.class, () -> Arrays.stream(array).forEach(arrayDeque::pushBack));
+    }
+
+    @ParameterizedTest(name = "{index}. {displayName} {arguments}")
+    @DisplayName("연결 리스트 덱 테스트")
+    @ArgumentsSource(ArgsProvider.class)
+    public void linkedListDeque(int[] expected, int[] array) {
         LinkedListDeque<Integer> linkedListDeque = new LinkedListDeque<>();
         for (int i = 0; i < array.length; i++) {
             if (i % 2 == 0) {
-                linkedListDeque.pushFirst(array[i]);
+                linkedListDeque.pushFront(array[i]);
             } else {
                 linkedListDeque.pushBack(array[i]);
             }
@@ -43,7 +84,7 @@ public class DequeTest {
     @ParameterizedTest(name = "{index}. {displayName} {arguments}")
     @DisplayName("연결 리스트 큐 실패 테스트")
     @ArgumentsSource(ArgsProvider.class)
-    public void arrayDequeFail() {
+    public void linkedListDequeFail() {
         LinkedListDeque<Integer> linkedListDeque = new LinkedListDeque<>();
         assertAll(
                 () -> assertThrows(NoSuchElementException.class, linkedListDeque::popFront),

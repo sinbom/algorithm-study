@@ -2,7 +2,7 @@ package dataStructure.custom;
 
 public interface MyDeque<T> {
 
-    void pushFirst(T data);
+    void pushFront(T data);
 
     T popFront();
 
@@ -15,5 +15,7 @@ public interface MyDeque<T> {
     T peekBack();
 
     boolean isEmpty();
+
+    int getSize();
 
 }
