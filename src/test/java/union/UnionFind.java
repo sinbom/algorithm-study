@@ -33,7 +33,8 @@ public class UnionFind {
         return getParent(array, array[array[index]]);
     }
 
-    // 쉽게 비유하자면 두개의 지렁이가 우두머리인 머리를 비교하여 머리가 상대 머리를 가르키면서 연결되는 형식
+    // 쉽게 비유하자면 두개의 지렁이(?)가 우두머리인 머리로 비교하여 비교 후 큰 머리가 작은 상대 머리를 가르키도록 하고
+    // 큰 머리 지렁이의 꼬리들은 계속 큰 지렁이의 머리를 가르키도록 유지되나 큰 머리가 변경되면서 간접적으로 작은 머리의 지렁이와 연결되는 형식으로 생각하면 이해하기 쉬울듯?
     public void unionFind(int[] array, int n, int m) {
         int nParent = getParent(array, n);
         int mParent = getParent(array, m);
