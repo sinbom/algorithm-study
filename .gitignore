@@ -1,8 +1,10 @@
 .gradle
+out/
+build/
+!gradle/wrapper/gradle-wrapper.jar
 .idea
-out
-build
-gradlew
-gradle
-*.gradle
-*.bat
+*.iws
+*.iml
+*.ipr
+!**/src/main/**/out/
+!**/src/test/**/out/
