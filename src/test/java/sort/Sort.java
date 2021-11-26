@@ -157,8 +157,8 @@ public class Sort {
             pivot = array[left + 1];
 
             do {
-                for (; right > low && pivot > array[low]; low++) ; // 최대 범위까지 피봇보다 큰 값 찾기
-                for (; left < high && pivot < array[high]; high--) ; // 최소 범위까지 피봇보다 작은 값 찾기
+                for (; right - 1 > low && pivot > array[low]; low++) ; // 최대 범위까지 피봇보다 큰 값 찾기
+                for (; left + 1 < high && pivot < array[high]; high--) ; // 최소 범위까지 피봇보다 작은 값 찾기
                 if (high > low) { // 교차하지 않은 경우 서로 찾은 피봇과 큰 값 작은 값 변경
                     swap(array, low, high); // 찾아서 서로 교체
                 }
